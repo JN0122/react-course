@@ -39,3 +39,11 @@ export function checkWinner(gameTurns) {
   }
   return undefined;
 }
+
+export function fillGameBoard(gameBoard, gameTurns) {
+  for (const { square, player } of gameTurns) {
+    const { row, col } = square;
+    gameBoard[row][col] = player;
+  }
+  return gameBoard;
+}
