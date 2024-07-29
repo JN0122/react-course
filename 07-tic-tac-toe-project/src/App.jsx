@@ -6,19 +6,16 @@ import {
   getActivePlayer,
   checkWinner,
   fillGameBoard,
+  initialGameBoard,
+  gameBoardSymbols,
 } from "./helpers/GameBoardHelper";
 
 import { useState } from "react";
 import GameOver from "./components/GameOver";
 
-const initialGameBoard = [
-  [null, null, null],
-  [null, null, null],
-  [null, null, null],
-];
-
 function App() {
   const [gameTurns, setGameTurns] = useState([]);
+  const [playersName, setPlayersName] = useState(["Player 1", "Player 2"]);
   const activePlayer = getActivePlayer(gameTurns);
 
   let gameBoard = [...initialGameBoard.map((innerArray) => [...innerArray])];
@@ -42,16 +39,14 @@ function App() {
     <main>
       <div id="game-container">
         <ol id="players" className="highlight-player">
-          <Player
-            initialName="Player 1"
-            symbol="X"
-            isActive={activePlayer === "X"}
-          />
-          <Player
-            initialName="Player 2"
-            symbol="O"
-            isActive={activePlayer === "O"}
-          />
+          {gameBoardSymbols.map((playerSymbol, playerIndex) => (
+            <Player
+              key={playerIndex}
+              initialName={playersName[playerIndex]}
+              symbol={playerSymbol}
+              isActive={activePlayer === playerSymbol}
+            />
+          ))}
         </ol>
         <GameBoard onSelectSquare={handleSelectSquare} board={gameBoard} />
         {(winner || isDraw) && (

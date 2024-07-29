@@ -1,3 +1,11 @@
+export const gameBoardSymbols = ["X", "O"];
+
+export const initialGameBoard = [
+  [null, null, null],
+  [null, null, null],
+  [null, null, null],
+];
+
 export function getActivePlayer(gameTurns) {
   let currentPlayer = "X";
 
@@ -8,7 +16,7 @@ export function getActivePlayer(gameTurns) {
 
 export function getBoardSummary(gameTurns) {
   const boardSummary = new Map();
-  for (let player of ["X", "O"]) {
+  for (let player of gameBoardSymbols) {
     boardSummary.set(player, {
       col: { 0: 0, 1: 0, 2: 0 },
       row: { 0: 0, 1: 0, 2: 0 },
