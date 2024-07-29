@@ -1,15 +1,10 @@
 import Player from "./components/Player";
 import GameBoard from "./components/GameBoard";
-import { useState } from "react";
 import Log from "./components/Log";
 
-function getActivePlayer(gameTurns) {
-  let currentPlayer = "X";
+import { getActivePlayer, checkWinner } from "./helpers/GameBoardHelper";
 
-  if (gameTurns.length > 0 && gameTurns[0].player === "X") currentPlayer = "O";
-
-  return currentPlayer;
-}
+import { useState } from "react";
 
 function App() {
   const [gameTurns, setGameTurns] = useState([]);
@@ -22,6 +17,8 @@ function App() {
     ]);
   }
 
+  const winner = checkWinner(gameTurns);
+  console.log(winner);
   return (
     <main>
       <div id="game-container">
