@@ -9,6 +9,7 @@ import {
 } from "./helpers/GameBoardHelper";
 
 import { useState } from "react";
+import GameOver from "./components/GameOver";
 
 const initialGameBoard = [
   [null, null, null],
@@ -16,12 +17,11 @@ const initialGameBoard = [
   [null, null, null],
 ];
 
-let gameBoard = initialGameBoard;
-
 function App() {
   const [gameTurns, setGameTurns] = useState([]);
   const activePlayer = getActivePlayer(gameTurns);
 
+  let gameBoard = [...initialGameBoard.map((innerArray) => [...innerArray])];
   fillGameBoard(gameBoard, gameTurns);
 
   function handleSelectSquare(row, col) {
@@ -31,8 +31,13 @@ function App() {
     ]);
   }
 
+  function handleRestart() {
+    setGameTurns([]);
+  }
+
   const winner = checkWinner(gameTurns);
-  console.log(winner);
+  const isDraw = gameTurns.length === 9 && !winner;
+
   return (
     <main>
       <div id="game-container">
@@ -49,6 +54,9 @@ function App() {
           />
         </ol>
         <GameBoard onSelectSquare={handleSelectSquare} board={gameBoard} />
+        {(winner || isDraw) && (
+          <GameOver winner={winner} onRestart={handleRestart} />
+        )}
       </div>
       <Log turns={gameTurns} />
     </main>
