@@ -37,13 +37,14 @@ export function getBoardSummary(gameTurns) {
 export function checkWinner(gameTurns) {
   const boardSummary = getBoardSummary(gameTurns);
 
-  for (let player of boardSummary.keys()) {
-    const playerBoard = boardSummary.get(player);
+  for (let playerSymbol of boardSummary.keys()) {
+    const playerBoard = boardSummary.get(playerSymbol);
     for (let i = 0; i < 3; i++) {
-      if (playerBoard.col[i] === 3 || playerBoard.row[i] === 3) return player;
+      if (playerBoard.col[i] === 3 || playerBoard.row[i] === 3)
+        return playerSymbol;
     }
     if (playerBoard.diagonal.ltr === 3 || playerBoard.diagonal.rtl === 3)
-      return player;
+      return playerSymbol;
   }
   return undefined;
 }
