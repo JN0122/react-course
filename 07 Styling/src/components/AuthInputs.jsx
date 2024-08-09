@@ -28,13 +28,13 @@ export default function AuthInputs() {
         <InputLabel
           label="Email"
           type="email"
-          className={emailNotValid ? "invalid" : undefined}
+          invalid={emailNotValid}
           onChange={(event) => handleInputChange("email", event.target.value)}
         />
         <InputLabel
           label="Password"
           type="password"
-          className={passwordNotValid ? "invalid" : undefined}
+          invalid={passwordNotValid}
           onChange={(event) =>
             handleInputChange("password", event.target.value)
           }
