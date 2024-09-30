@@ -1,9 +1,12 @@
-import { useEffect, useState, forwardRef } from "react";
+import { useEffect, useState } from "react";
 
-export default forwardRef(function ProgressBar(
-  { startValue, max, step = -10, ...passThruProps },
-  ref
-) {
+export default function ProgressBar({
+  startValue,
+  onTimeUp,
+  max,
+  step = -10,
+  ...passThruProps
+}) {
   const [value, setValue] = useState(startValue || max);
   const maxValue = max || startValue;
 
@@ -16,6 +19,7 @@ export default forwardRef(function ProgressBar(
       setValue((prev) => {
         const newValue = prev + step;
         if (newValue <= 0) {
+          onTimeUp();
           clearInterval(timer);
         }
         return newValue;
@@ -25,7 +29,7 @@ export default forwardRef(function ProgressBar(
     return () => {
       clearInterval(timer);
     };
-  }, []);
+  }, [onTimeUp]);
 
-  return <progress ref={ref} value={value} max={maxValue} {...passThruProps} />;
-});
+  return <progress value={value} max={maxValue} {...passThruProps} />;
+}
