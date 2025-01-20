@@ -1,7 +1,7 @@
 import questions from "../../assets/questions";
-import { useState} from "react";
+import {useState} from "react";
 import Question from "./Question";
-import ProgressBarGrow from "../ProgressBar/ProgressBarGrow.jsx";
+import ProgressBar from "../ProgressBar/ProgressBar.jsx";
 
 const timeIntervals = {ANSWER: 3000, AFTER_ANSWER: 1500, SHOW_CORRECT_ANSWER: 2000}
 
@@ -11,41 +11,40 @@ export default function Quiz() {
   const [showAnswer, setShowAnswer] = useState(false);
   const [timer, setTimer] = useState(timeIntervals.ANSWER);
 
-  function handleNextQuestion() {
+  const handleNextQuestion = function() {
       setShowAnswer(false);
       setTimer(timeIntervals.ANSWER);
       setSelectedAnswer(undefined);
       setCurrentQuestionIndex((prev) => prev + 1);
   }
 
-  function handleShowAnswer() {
+  const handleShowAnswer = function() {
       setShowAnswer(true);
       setTimer(timeIntervals.SHOW_CORRECT_ANSWER);
   }
 
-  function handleAnswerSelect(answerIndex){
+    const handleAnswerSelect = function(answerIndex){
       setSelectedAnswer(answerIndex);
       setTimer(timeIntervals.AFTER_ANSWER);
   }
 
-  function handleTimeUp(){
-    if(selectedAnswer === undefined){
-        handleAnswerSelect(null);
-    }else if(showAnswer === false){
-        handleShowAnswer();
-    }else{
-        handleNextQuestion();
-    }
+  const handleTimeUp = function() {
+      if (selectedAnswer === undefined) {
+          handleAnswerSelect(null);
+      } else if (showAnswer === false) {
+          handleShowAnswer();
+      } else {
+          handleNextQuestion();
+      }
   }
 
   return (
       <div id="quiz">
           <div id="question">
-              <ProgressBarGrow
-                  key={timer}
+              <ProgressBar
                   maxValue={timer}
                   onTimeUp={handleTimeUp}
-                  className={selectedAnswer !== undefined && showAnswer === false ? "answered":""}
+                  className={selectedAnswer !== undefined && !showAnswer ? "answered":""}
               />
               <Question
                   key={currentQuestionIndex}

@@ -1,27 +1,37 @@
 import { useEffect, useState } from "react";
 
-export default function CustomProgressBar({
+const step = 10;
+
+export default function ProgressBar({
   maxValue,
   onTimeUp,
-  step,
   ...rest
 }) {
-  const [value, setValue] = useState(step > 0 ? 0 : maxValue);
+  const [value, setValue] = useState(0);
+  const [timeUp, setTimeUp] = useState(false);
 
   useEffect(() => {
+    if(!timeUp) return;
+    onTimeUp();
+  }, [timeUp]);
+
+  useEffect(() => {
+    setValue(0);
+    setTimeUp(false);
     const timer = setInterval(() => {
       setValue((prev) => {
         const newValue = prev + step;
         if (newValue > 0 && newValue < maxValue) return newValue;
-        onTimeUp();
         clearInterval(timer);
+        setTimeUp(true);
+        return maxValue;
       });
     }, 10);
 
     return () => {
       clearInterval(timer);
     };
-  }, [onTimeUp]);
+  }, [onTimeUp, maxValue]);
 
   return <progress value={value} max={maxValue} {...rest} />;
 }
