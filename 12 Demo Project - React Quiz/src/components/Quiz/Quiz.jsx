@@ -1,15 +1,29 @@
 import questions from "../../assets/questions";
-import {useState} from "react";
+import {useMemo, useReducer, useState} from "react";
 import Question from "./Question";
 import ProgressBar from "../ProgressBar/ProgressBar.jsx";
+import Summary from "../Summary.jsx";
 
-const timeIntervals = {ANSWER: 3000, AFTER_ANSWER: 1500, SHOW_CORRECT_ANSWER: 2000}
+const timeIntervals = {ANSWER: 6000, AFTER_ANSWER: 100, SHOW_CORRECT_ANSWER: 100}
+
+function quizReducer(state, action) {
+    switch (action.type) {
+        case "ADD_ANSWER":
+            return{
+                ...state,
+                answers: [...state.answers, action.payload]
+            }
+    }
+}
 
 export default function Quiz() {
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [selectedAnswer, setSelectedAnswer] = useState(undefined);
   const [showAnswer, setShowAnswer] = useState(false);
   const [timer, setTimer] = useState(timeIntervals.ANSWER);
+  const [quiz, quizDispatch] = useReducer(quizReducer, {
+      answers: []
+  })
 
   const handleNextQuestion = function() {
       setShowAnswer(false);
@@ -25,6 +39,13 @@ export default function Quiz() {
 
     const handleAnswerSelect = function(answerIndex){
       setSelectedAnswer(answerIndex);
+      quizDispatch({
+          type: "ADD_ANSWER",
+          payload: {
+              id: questions[currentQuestionIndex].id,
+              answerIndex
+          }
+      });
       setTimer(timeIntervals.AFTER_ANSWER);
   }
 
@@ -38,6 +59,11 @@ export default function Quiz() {
       }
   }
 
+  const question = useMemo(()=> questions[currentQuestionIndex], [currentQuestionIndex]);
+
+  if(!question)
+      return <Summary quiz={quiz} />;
+
   return (
       <div id="quiz">
           <div id="question">
@@ -48,7 +74,7 @@ export default function Quiz() {
               />
               <Question
                   key={currentQuestionIndex}
-                  content={questions[currentQuestionIndex]}
+                  content={question}
                   onAnswerSelect={handleAnswerSelect}
                   showAnswer={showAnswer}
                   disabled={selectedAnswer !== undefined}
