@@ -3,9 +3,9 @@ import {useState} from "react";
 export default function Question({ content, onAnswerSelect, showAnswer, ...rest}) {
     const [selectedAnswer, setSelectedAnswer] = useState(null);
 
-    function handleAnswerSelect(index) {
+    function handleAnswerSelect(index, isCorrect) {
         setSelectedAnswer(index);
-        onAnswerSelect(index);
+        onAnswerSelect(index, isCorrect);
     }
 
    const answers = content.answers.map((text, index) => {
@@ -17,7 +17,7 @@ export default function Question({ content, onAnswerSelect, showAnswer, ...rest}
     return (
         <li className="answer" key={index}>
           <button
-              onClick={() => handleAnswerSelect(index)}
+              onClick={() => handleAnswerSelect(index, index === content.correctAnswerIndex)}
               className={className}
               {...rest}
           >

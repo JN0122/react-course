@@ -4,26 +4,14 @@ import Question from "./Question";
 import ProgressBar from "../ProgressBar/ProgressBar.jsx";
 import Summary from "../Summary.jsx";
 
-const timeIntervals = {ANSWER: 6000, AFTER_ANSWER: 100, SHOW_CORRECT_ANSWER: 100}
-
-function quizReducer(state, action) {
-    switch (action.type) {
-        case "ADD_ANSWER":
-            return{
-                ...state,
-                answers: [...state.answers, action.payload]
-            }
-    }
-}
+const timeIntervals = {ANSWER: 1000, AFTER_ANSWER: 100, SHOW_CORRECT_ANSWER: 100}
 
 export default function Quiz() {
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [selectedAnswer, setSelectedAnswer] = useState(undefined);
   const [showAnswer, setShowAnswer] = useState(false);
   const [timer, setTimer] = useState(timeIntervals.ANSWER);
-  const [quiz, quizDispatch] = useReducer(quizReducer, {
-      answers: []
-  })
+  const [answers, setAnswers] = useState([])
 
   const handleNextQuestion = function() {
       setShowAnswer(false);
@@ -37,21 +25,24 @@ export default function Quiz() {
       setTimer(timeIntervals.SHOW_CORRECT_ANSWER);
   }
 
-    const handleAnswerSelect = function(answerIndex){
+    const handleAnswerSelect = function(answerIndex, isCorrect){
       setSelectedAnswer(answerIndex);
-      quizDispatch({
-          type: "ADD_ANSWER",
-          payload: {
-              id: questions[currentQuestionIndex].id,
-              answerIndex
-          }
-      });
+        setAnswers((prev)=>{
+            return [
+                ...prev,
+                {
+                    answerIndex,
+                    isCorrect
+                }
+            ]
+        }
+      );
       setTimer(timeIntervals.AFTER_ANSWER);
   }
 
   const handleTimeUp = function() {
       if (selectedAnswer === undefined) {
-          handleAnswerSelect(null);
+          handleAnswerSelect(null, null);
       } else if (showAnswer === false) {
           handleShowAnswer();
       } else {
@@ -62,7 +53,7 @@ export default function Quiz() {
   const question = useMemo(()=> questions[currentQuestionIndex], [currentQuestionIndex]);
 
   if(!question)
-      return <Summary quiz={quiz} />;
+      return <Summary answers={answers} />;
 
   return (
       <div id="quiz">
