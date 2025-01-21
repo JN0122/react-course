@@ -4,14 +4,14 @@ import Question from "./Question";
 import ProgressBar from "../ProgressBar/ProgressBar.jsx";
 import Summary from "../Summary.jsx";
 
-const timeIntervals = {ANSWER: 1000, AFTER_ANSWER: 100, SHOW_CORRECT_ANSWER: 100}
+const timeIntervals = {ANSWER: 6000, AFTER_ANSWER: 1500, SHOW_CORRECT_ANSWER: 3000}
 
 export default function Quiz() {
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [selectedAnswer, setSelectedAnswer] = useState(undefined);
   const [showAnswer, setShowAnswer] = useState(false);
   const [timer, setTimer] = useState(timeIntervals.ANSWER);
-  const [answers, setAnswers] = useState([])
+  const [userAnswers, setUserAnswers] = useState([])
 
   const handleNextQuestion = function() {
       setShowAnswer(false);
@@ -27,7 +27,7 @@ export default function Quiz() {
 
     const handleAnswerSelect = function(answerIndex, isCorrect){
       setSelectedAnswer(answerIndex);
-        setAnswers((prev)=>{
+        setUserAnswers((prev)=>{
             return [
                 ...prev,
                 {
@@ -53,7 +53,7 @@ export default function Quiz() {
   const question = useMemo(()=> questions[currentQuestionIndex], [currentQuestionIndex]);
 
   if(!question)
-      return <Summary answers={answers} />;
+      return <Summary answers={userAnswers} />;
 
   return (
       <div id="quiz">
