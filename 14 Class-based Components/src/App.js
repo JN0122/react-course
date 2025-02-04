@@ -1,9 +1,12 @@
 import UserFinder from "./components/UserFinder";
+import {UserProvider} from "./context/users-context";
 
 function App() {
   return (
     <div>
-      <UserFinder />
+        <UserProvider>
+            <UserFinder />
+        </UserProvider>
     </div>
   );
 }

@@ -2,19 +2,16 @@ import {Fragment, Component} from 'react';
 
 import Users from './Users';
 import classes from './UserFinder.module.css';
-
-const DUMMY_USERS = [
-  { id: 'u1', name: 'Max' },
-  { id: 'u2', name: 'Manuel' },
-  { id: 'u3', name: 'Julie' },
-];
+import {UsersContext} from "../context/users-context";
 
 class UserFinder extends Component {
+  static contextType = UsersContext;
+
   constructor(props) {
     super(props);
     this.state = {
       searchTerm: "",
-      filteredUsers: DUMMY_USERS
+      filteredUsers: []
     }
   }
 
@@ -22,10 +19,14 @@ class UserFinder extends Component {
     this.setState({searchTerm: event.target.value});
   }
 
+  componentDidMount() {
+    this.setState({filteredUsers: this.context.users});
+  }
+
   componentDidUpdate(_, prevState) {
     if(prevState.searchTerm === this.state.searchTerm) return;
     this.setState({
-      filteredUsers: DUMMY_USERS.filter((user) => user.name.includes(this.state.searchTerm))
+      filteredUsers: this.context.users.filter((user) => user.name.includes(this.state.searchTerm))
     });
   }
 
