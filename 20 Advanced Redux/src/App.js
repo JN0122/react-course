@@ -6,7 +6,7 @@ import Layout from "./components/Layout/Layout";
 import Products from "./components/Shop/Products";
 import Notification from "./components/UI/Notification";
 
-import { showNotification } from "./store/ui";
+import { sendCardData } from "./store/cart";
 
 let isInitial = true;
 
@@ -17,47 +17,11 @@ function App() {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    const fetchCartData = async () => {
-      dispatch(
-        showNotification({
-          status: "pending",
-          title: "Sending...",
-          message: "Sending cart data!",
-        })
-      );
-
-      const response = await fetch(
-        "https://advanced-redux-4262f-default-rtdb.europe-west1.firebasedatabase.app/cart.json",
-        { method: "PUT", body: JSON.stringify(cart) }
-      );
-
-      if (!response.ok) {
-        throw new Error("Sending cart data failed.");
-      }
-
-      dispatch(
-        showNotification({
-          status: "success",
-          title: "Success!",
-          message: "Sent cart data successfully!",
-        })
-      );
-    };
-
     if (isInitial) {
       isInitial = false;
       return;
     }
-
-    fetchCartData().catch((error) => {
-      dispatch(
-        showNotification({
-          status: "error",
-          title: "Error!",
-          message: error.message,
-        })
-      );
-    });
+    dispatch(sendCardData(cart));
   }, [cart, dispatch]);
 
   return (
