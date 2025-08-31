@@ -1,30 +1,54 @@
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from "react-router-dom";
 
-import classes from './EventForm.module.css';
+import classes from "./EventForm.module.css";
 
 function EventForm({ method, event }) {
   const navigate = useNavigate();
   function cancelHandler() {
-    navigate('..');
+    navigate("..");
   }
 
   return (
     <form className={classes.form}>
       <p>
         <label htmlFor="title">Title</label>
-        <input id="title" type="text" name="title" required />
+        <input
+          id="title"
+          type="text"
+          name="title"
+          defaultValue={event?.title ?? ""}
+          required
+        />
       </p>
       <p>
         <label htmlFor="image">Image</label>
-        <input id="image" type="url" name="image" required />
+        <input
+          id="image"
+          type="url"
+          name="image"
+          defaultValue={event?.image ?? ""}
+          required
+        />
       </p>
       <p>
         <label htmlFor="date">Date</label>
-        <input id="date" type="date" name="date" required />
+        <input
+          id="date"
+          type="date"
+          name="date"
+          defaultValue={event?.date ?? ""}
+          required
+        />
       </p>
       <p>
         <label htmlFor="description">Description</label>
-        <textarea id="description" name="description" rows="5" required />
+        <textarea
+          id="description"
+          name="description"
+          rows="5"
+          defaultValue={event?.description ?? ""}
+          required
+        />
       </p>
       <div className={classes.actions}>
         <button type="button" onClick={cancelHandler}>
@@ -37,3 +61,4 @@ function EventForm({ method, event }) {
 }
 
 export default EventForm;
+
