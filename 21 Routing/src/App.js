@@ -3,6 +3,7 @@ import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import EditEventPage from "./pages/EditEvent";
 import EventDetailPage, {
   loader as eventDetailLoader,
+  action as eventsAction,
 } from "./pages/EventDetail";
 import EventsPage, { loader as eventsLoader } from "./pages/Events";
 import EventsRootLayout from "./pages/EventsRoot";
@@ -32,7 +33,11 @@ const router = createBrowserRouter([
             path: ":eventId",
             loader: eventDetailLoader,
             children: [
-              { index: true, element: <EventDetailPage /> },
+              {
+                index: true,
+                element: <EventDetailPage />,
+                action: eventsAction,
+              },
               { path: "edit", element: <EditEventPage /> },
             ],
           },
