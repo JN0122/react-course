@@ -24,6 +24,10 @@ export const action = async ({ request }) => {
     body: JSON.stringify(eventData),
   });
 
+  if (response.status === 422) {
+    return response;
+  }
+
   if (!response.ok) {
     throw new Request({ message: "Could not save event." }, { status: 500 });
   }
