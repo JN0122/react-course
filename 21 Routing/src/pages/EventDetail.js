@@ -1,16 +1,28 @@
-import { useRouteLoaderData, redirect } from "react-router-dom";
+import { useRouteLoaderData, redirect, defer, Await } from "react-router-dom";
+
 import EventItem from "../components/EventItem";
+import { loadEvents } from "./Events";
+import EventsList from "../components/EventsList";
+import { Suspense } from "react";
 
 function EventDetailPage() {
-  const event = useRouteLoaderData("event-detail");
+  const { event, events } = useRouteLoaderData("event-detail");
 
-  return <EventItem event={event} />;
+  return (
+    <>
+      <EventItem event={event} />
+      <Suspense fallback={<p style={{ textAlign: "center" }}>Loading...</p>}>
+        <Await resolve={events}>
+          {(loadedEvents) => <EventsList events={loadedEvents} />}
+        </Await>
+      </Suspense>
+    </>
+  );
 }
 
 export default EventDetailPage;
 
-export async function loader({ params }) {
-  const id = params.eventId;
+const loadEvent = async (id) => {
   const response = await fetch(`http://localhost:8080/events/${id}`);
 
   if (!response.ok) {
@@ -24,6 +36,12 @@ export async function loader({ params }) {
     const resData = await response.json();
     return resData.event;
   }
+};
+
+export async function loader({ params }) {
+  const id = params.eventId;
+
+  return defer({ event: await loadEvent(id), events: loadEvents() });
 }
 
 export async function action({ params, request }) {
