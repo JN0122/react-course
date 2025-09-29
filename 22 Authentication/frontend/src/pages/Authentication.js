@@ -1,6 +1,6 @@
 import { redirect } from "react-router-dom";
 import AuthForm from "../components/AuthForm";
-import { setToken } from "../util/auth";
+import { setToken, setTokenDuration } from "../util/auth";
 
 function AuthenticationPage() {
   return <AuthForm />;
@@ -42,6 +42,7 @@ export async function action({ request, params }) {
   const resData = await response.json();
   const { token } = resData;
   setToken(token);
+  setTokenDuration(60 * 60 * 1000); // 1 hour
 
   return redirect("/");
 }

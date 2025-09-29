@@ -1,7 +1,8 @@
 import { redirect } from "react-router-dom";
-import { clearToken } from "../util/auth";
+import { clearToken, clearTokenDuration } from "../util/auth";
 
 export function action() {
   clearToken();
+  clearTokenDuration();
   return redirect("/");
 }
