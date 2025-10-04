@@ -1,11 +1,17 @@
-import './globals.css';
+import type { Metadata } from "next";
 
-export const metadata = {
-  title: 'NextLevel Food',
-  description: 'Delicious meals, shared by a food-loving community.',
+import "./globals.css";
+
+export const metadata: Metadata = {
+  title: "NextLevel Food",
+  description: "Delicious meals, shared by a food-loving community.",
 };
 
-export default function RootLayout({ children }) {
+interface Props {
+  children: React.ReactNode;
+}
+
+const RootLayout = ({ children }: Props) => {
   return (
     <html lang="en">
       <body>
@@ -15,11 +21,11 @@ export default function RootLayout({ children }) {
               <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="0%">
                 <stop
                   offset="0%"
-                  style={{ stopColor: '#59453c', stopOpacity: '1' }}
+                  style={{ stopColor: "#59453c", stopOpacity: "1" }}
                 />
                 <stop
                   offset="100%"
-                  style={{ stopColor: '#8f3a09', stopOpacity: '1' }}
+                  style={{ stopColor: "#8f3a09", stopOpacity: "1" }}
                 />
               </linearGradient>
             </defs>
@@ -34,4 +40,7 @@ export default function RootLayout({ children }) {
       </body>
     </html>
   );
-}
+};
+
+export default RootLayout;
+
