@@ -1,30 +1,28 @@
 import Link from "next/link";
 import Image from "next/image";
 
-import logoImage from "@/assets/logo.png";
-import classes from "./MainHeader.module.css";
 import MainHeaderBackground from "./MainHeaderBackground";
+import Navigation from "../Navigation";
+
+import logoImage from "@/assets/logo.png";
+import { NavigationLink } from "@/types/navigation";
+import classes from "./MainHeader.module.css";
+
+const links: NavigationLink[] = [
+  { name: "Browse Meals", path: "/meals" },
+  { name: "Foodies Community", path: "/community" },
+];
 
 const MainHeader = () => {
   return (
     <>
-      <MainHeaderBackground />{" "}
+      <MainHeaderBackground />
       <header className={classes.header}>
         <Link href="/" className={classes.logo}>
           <Image src={logoImage} alt="A plate with food on it" priority />
           NextLevel Food
         </Link>
-
-        <nav className={classes.nav}>
-          <ul>
-            <li>
-              <Link href="/meals">Browse Meals</Link>
-            </li>
-            <li>
-              <Link href="/community">Foodies Community</Link>
-            </li>
-          </ul>
-        </nav>
+        <Navigation links={links} />
       </header>
     </>
   );
