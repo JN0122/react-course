@@ -3,10 +3,13 @@ import { NextPage } from "next";
 import classes from "./page.module.css";
 import Link from "next/link";
 import MealsGrid from "@/components/meals/meals-grid";
+import { getMeals } from "@/lib/db/meals";
 
 interface Props {}
 
-const MealsPage: NextPage<Props> = ({}) => {
+const MealsPage: NextPage<Props> = async ({}) => {
+  const meals = await getMeals();
+
   return (
     <>
       <header className={classes.header}>
@@ -22,7 +25,7 @@ const MealsPage: NextPage<Props> = ({}) => {
         </p>
       </header>
       <main className={classes.main}>
-        <MealsGrid meals={[]} />
+        <MealsGrid meals={meals} />
       </main>
     </>
   );
