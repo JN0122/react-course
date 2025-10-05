@@ -1,0 +1,23 @@
+import MealItem from "./meal-item";
+
+import { MealItem as MealItemType } from "@/types/meal";
+import classes from "./meals-grid.module.css";
+import { HTMLProps } from "react";
+
+type Props = HTMLProps<HTMLUListElement> & {
+  meals: MealItemType[];
+};
+
+const MealsGrid = ({ meals, ...rest }: Props) => {
+  return (
+    <ul className={classes.meals} {...rest}>
+      {meals.map((meal) => (
+        <li key={meal.id}>
+          <MealItem meal={meal} />
+        </li>
+      ))}
+    </ul>
+  );
+};
+
+export default MealsGrid;

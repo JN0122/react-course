@@ -6,7 +6,7 @@ import Navigation from "../navigation";
 
 import logoImage from "@/assets/logo.png";
 import { NavigationLink } from "@/types/navigation";
-import classes from "./MainHeader.module.css";
+import classes from "./main-header.module.css";
 
 const links: NavigationLink[] = [
   { name: "Browse Meals", path: "/meals" },
