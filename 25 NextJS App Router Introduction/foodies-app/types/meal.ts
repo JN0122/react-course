@@ -1,7 +1,7 @@
 import { StaticImageData } from "next/image";
 
-export type MealItem = {
-  id: string;
+export type Meal = {
+  id: number;
   title: string;
   slug: string;
   image: StaticImageData;

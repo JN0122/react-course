@@ -1,11 +1,11 @@
 import Link from "next/link";
 import Image from "next/image";
 
-import { MealItem as MealItemType } from "@/types/meal";
+import { Meal } from "@/types/meal";
 import classes from "./meal-item.module.css";
 
 type Props = {
-  meal: MealItemType;
+  meal: Meal;
 };
 
 export default function MealItem({ meal }: Props) {

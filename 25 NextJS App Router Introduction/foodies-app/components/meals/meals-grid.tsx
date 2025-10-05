@@ -1,11 +1,11 @@
 import MealItem from "./meal-item";
 
-import { MealItem as MealItemType } from "@/types/meal";
+import { Meal } from "@/types/meal";
 import classes from "./meals-grid.module.css";
 import { HTMLProps } from "react";
 
 type Props = HTMLProps<HTMLUListElement> & {
-  meals: MealItemType[];
+  meals: Meal[];
 };
 
 const MealsGrid = ({ meals, ...rest }: Props) => {
