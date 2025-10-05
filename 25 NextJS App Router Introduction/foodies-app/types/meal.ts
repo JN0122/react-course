@@ -7,4 +7,6 @@ export type Meal = {
   image: StaticImageData;
   summary: string;
   creator: string;
+  creator_email: string;
+  instructions: string;
 };

@@ -5,7 +5,7 @@ import classes from "./meals-grid.module.css";
 import { HTMLProps } from "react";
 
 type Props = HTMLProps<HTMLUListElement> & {
-  meals: Meal[];
+  meals: Omit<Meal, "creator_email" | "instructions">[];
 };
 
 const MealsGrid = ({ meals, ...rest }: Props) => {

@@ -5,7 +5,7 @@ import { Meal } from "@/types/meal";
 import classes from "./meal-item.module.css";
 
 type Props = {
-  meal: Meal;
+  meal: Omit<Meal, "creator_email" | "instructions">;
 };
 
 export default function MealItem({ meal }: Props) {
