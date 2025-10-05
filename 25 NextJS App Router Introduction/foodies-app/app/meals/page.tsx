@@ -1,15 +1,13 @@
+import { Suspense } from "react";
 import { NextPage } from "next";
+import Link from "next/link";
+
+import LoadingMealsPage from "./_meals/loading-meals";
 
 import classes from "./page.module.css";
-import Link from "next/link";
-import MealsGrid from "@/components/meals/meals-grid";
-import { getMeals } from "@/lib/db/meals";
+import Meals from "./_meals/meals";
 
-interface Props {}
-
-const MealsPage: NextPage<Props> = async ({}) => {
-  const meals = await getMeals();
-
+const MealsPage: NextPage = async ({}) => {
   return (
     <>
       <header className={classes.header}>
@@ -25,7 +23,9 @@ const MealsPage: NextPage<Props> = async ({}) => {
         </p>
       </header>
       <main className={classes.main}>
-        <MealsGrid meals={meals} />
+        <Suspense fallback={<LoadingMealsPage />}>
+          <Meals />
+        </Suspense>
       </main>
     </>
   );
