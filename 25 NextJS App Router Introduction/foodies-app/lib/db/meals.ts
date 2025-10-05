@@ -14,3 +14,12 @@ export async function getMeals(): Promise<
     .all();
   return meals;
 }
+
+export function getMeal(slug: string): Meal | undefined {
+  const meal = db
+    .prepare<[string], Meal | undefined>(
+      "SELECT id, title, slug, image, summary, creator, creator_email, instructions FROM meals WHERE slug = ?"
+    )
+    .get(slug);
+  return meal;
+}
