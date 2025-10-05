@@ -4,7 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 import { NavigationLink } from "@/types/navigation";
-import classes from "./NavLink.module.css";
+import classes from "./nav-link.module.css";
 
 type Props = { link: NavigationLink };
 

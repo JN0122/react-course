@@ -1,4 +1,4 @@
-import NavLink from "./NavLink";
+import NavLink from "./nav-link";
 
 import { NavigationLink } from "@/types/navigation";
 import classes from "./Navigation.module.css";

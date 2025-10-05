@@ -1,8 +1,8 @@
 import Link from "next/link";
 import Image from "next/image";
 
-import MainHeaderBackground from "./MainHeaderBackground";
-import Navigation from "../Navigation";
+import MainHeaderBackground from "./main-header-background";
+import Navigation from "../navigation";
 
 import logoImage from "@/assets/logo.png";
 import { NavigationLink } from "@/types/navigation";
