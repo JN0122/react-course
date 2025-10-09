@@ -3,21 +3,19 @@ import sql from "better-sqlite3";
 
 const db = sql("data/meals.db");
 
-export async function getMeals(): Promise<
-  Omit<Meal, "creator_email" | "instructions">[]
-> {
+export async function getMeals(): Promise<Meal[] | []> {
   await new Promise((resolve) => setTimeout(resolve, 2000)); // for loading simulation
   const meals = db
-    .prepare<[], Omit<Meal, "creator_email" | "instructions">>(
-      "SELECT id, title, slug, image, summary, creator FROM meals"
+    .prepare<[], Meal>(
+      "SELECT id, title, slug, image, summary, creator, creator_email, instructions FROM meals"
     )
     .all();
   return meals;
 }
 
-export function getMeal(slug: string): Meal | undefined {
+export function getMeal(slug: string): Meal | null {
   const meal = db
-    .prepare<[string], Meal | undefined>(
+    .prepare<[string], Meal | null>(
       "SELECT id, title, slug, image, summary, creator, creator_email, instructions FROM meals WHERE slug = ?"
     )
     .get(slug);

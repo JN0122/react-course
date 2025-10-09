@@ -10,3 +10,8 @@ export type Meal = {
   creator_email: string;
   instructions: string;
 };
+
+export type UploadedMeal = Pick<
+  Meal,
+  "title" | "summary" | "instructions" | "image" | "creator" | "creator_email"
+>;
