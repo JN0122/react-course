@@ -13,5 +13,5 @@ export type Meal = {
 
 export type UploadedMeal = Pick<
   Meal,
-  "title" | "summary" | "instructions" | "image" | "creator" | "creator_email"
->;
+  "title" | "summary" | "instructions" | "creator" | "creator_email"
+> & { image: File | null };
