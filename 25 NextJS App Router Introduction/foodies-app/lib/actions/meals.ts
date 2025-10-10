@@ -3,16 +3,24 @@
 import { UploadedMeal } from "@/types/meal";
 import { insertMeal } from "../db/meals";
 import { redirect } from "next/navigation";
+import { isValidMeal } from "../validation/meals";
+import { FormState } from "@/types/form";
 
-export async function shareMeal(formData: FormData) {
+export async function shareMeal(
+  state: FormState,
+  payload: FormData
+): Promise<FormState> {
   const meal: UploadedMeal = {
-    title: formData.get("title")?.toString(),
-    summary: formData.get("summary")?.toString(),
-    instructions: formData.get("instructions")?.toString(),
-    image: formData.get("image") as File,
-    creator: formData.get("name")?.toString(),
-    creator_email: formData.get("email")?.toString(),
+    title: payload.get("title")?.toString(),
+    summary: payload.get("summary")?.toString(),
+    instructions: payload.get("instructions")?.toString(),
+    image: payload.get("image") as File,
+    creator: payload.get("name")?.toString(),
+    creator_email: payload.get("email")?.toString(),
   };
+
+  if (!isValidMeal(meal))
+    return { message: "Invalid input - please check your data." };
 
   await insertMeal(meal);
 
