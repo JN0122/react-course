@@ -1,11 +1,16 @@
 import { Suspense } from "react";
-import { NextPage } from "next";
+import { Metadata, NextPage } from "next";
 import Link from "next/link";
 
 import LoadingMealsPage from "./_meals/loading-meals";
 
 import classes from "./page.module.css";
 import Meals from "./_meals/meals";
+
+export const metadata: Metadata = {
+  title: "All Meals",
+  description: "Delicious meals, created by you.",
+};
 
 const MealsPage: NextPage = async ({}) => {
   return (

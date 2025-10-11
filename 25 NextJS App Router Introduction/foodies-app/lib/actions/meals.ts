@@ -5,6 +5,7 @@ import { insertMeal } from "../db/meals";
 import { redirect } from "next/navigation";
 import { isValidMeal } from "../validation/meals";
 import { FormState } from "@/types/form";
+import { revalidatePath } from "next/cache";
 
 export async function shareMeal(
   state: FormState,
@@ -23,6 +24,8 @@ export async function shareMeal(
     return { message: "Invalid input - please check your data." };
 
   await insertMeal(meal);
+
+  revalidatePath("/meals", "page");
 
   redirect("/meals");
 }

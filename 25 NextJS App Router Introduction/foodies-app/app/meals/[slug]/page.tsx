@@ -1,4 +1,4 @@
-import { NextPage } from "next";
+import { Metadata, NextPage } from "next";
 import Image from "next/image";
 import { notFound } from "next/navigation";
 
@@ -11,6 +11,18 @@ type Props = {
     slug: string;
   }>;
 };
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { slug } = await params;
+  const meal = getMeal(slug);
+
+  if (!meal) notFound();
+
+  return {
+    title: `Share ${meal.title}`,
+    description: meal.summary,
+  };
+}
 
 const MealDetails: NextPage<Props> = async ({ params }) => {
   const { slug } = await params;
