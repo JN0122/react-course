@@ -1,6 +1,7 @@
 import { GetStaticProps } from "next";
 
 import MeetupList from "@/components/meetups/MeetupList";
+import { closeClient, getClient, getCollection } from "@/lib/database/mongodb";
 import { Meetup } from "@/lib/types/meetup";
 
 type Props = {
@@ -11,34 +12,23 @@ export default function HomePage({ meetups }: Props) {
   return <MeetupList meetups={meetups} />;
 }
 
-export const getStaticProps: GetStaticProps<Props> = () => {
-  const DUMMY_MEETUPS = [
-    {
-      id: "m1",
-      title: "First Meetup",
-      image: "http://media.krakow.travel/photos/18784/noresize.jpg",
-      address: "123 Main St, City",
-      description: "This is the first meetup.",
-    },
-    {
-      id: "m2",
-      title: "Second Meetup",
-      image: "http://media.krakow.travel/photos/18784/noresize.jpg",
-      address: "456 Elm St, City",
-      description: "This is the second meetup.",
-    },
-    {
-      id: "m3",
-      title: "Third Meetup",
-      image: "http://media.krakow.travel/photos/18784/noresize.jpg",
-      address: "789 Oak St, City",
-      description: "This is the third meetup.",
-    },
-  ];
+export const getStaticProps: GetStaticProps<Props> = async () => {
+  const client = await getClient();
+  const meetupsCollection = getCollection(client);
+
+  const results = await meetupsCollection.find().toArray();
+
+  closeClient(client);
 
   return {
     props: {
-      meetups: DUMMY_MEETUPS,
+      meetups: results.map((meetup) => ({
+        id: meetup._id.toString(),
+        title: meetup.title,
+        description: meetup.description,
+        address: meetup.address,
+        image: meetup.image,
+      })),
     },
     revalidate: 10,
   };
