@@ -1,4 +1,5 @@
 import { GetStaticProps } from "next";
+import Head from "next/head";
 
 import MeetupList from "@/components/meetups/MeetupList";
 import { closeClient, getClient, getCollection } from "@/lib/database/mongodb";
@@ -9,7 +10,18 @@ type Props = {
 };
 
 export default function HomePage({ meetups }: Props) {
-  return <MeetupList meetups={meetups} />;
+  return (
+    <>
+      <Head>
+        <title>React Meetups</title>
+        <meta
+          name="description"
+          content="Browse a huge list of highly active React meetups!"
+        />
+      </Head>
+      <MeetupList meetups={meetups} />
+    </>
+  );
 }
 
 export const getStaticProps: GetStaticProps<Props> = async () => {

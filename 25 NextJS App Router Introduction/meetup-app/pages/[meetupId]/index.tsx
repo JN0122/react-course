@@ -4,6 +4,7 @@ import { ObjectId } from "mongodb";
 import MeetupDetail from "@/components/meetups/MeetupDetail";
 import { Meetup } from "@/lib/types/meetup";
 import { closeClient, getClient, getCollection } from "@/lib/database/mongodb";
+import Head from "next/head";
 
 type Props = {
   meetupData: Meetup;
@@ -65,6 +66,14 @@ export const getStaticProps: GetStaticProps<Props, Params> = async ({
 export default function MeetupDetails({
   meetupData,
 }: InferGetStaticPropsType<typeof getStaticProps>) {
-  return <MeetupDetail meetupData={meetupData} />;
+  return (
+    <>
+      <Head>
+        <title>{meetupData.title}</title>
+        <meta name="description" content={meetupData.description} />
+      </Head>
+      <MeetupDetail meetupData={meetupData} />
+    </>
+  );
 }
 
