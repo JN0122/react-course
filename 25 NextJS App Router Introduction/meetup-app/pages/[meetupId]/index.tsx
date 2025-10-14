@@ -1,7 +1,9 @@
 import { GetStaticPaths, GetStaticProps, InferGetStaticPropsType } from "next";
+import { ObjectId } from "mongodb";
 
 import MeetupDetail from "@/components/meetups/MeetupDetail";
 import { Meetup } from "@/lib/types/meetup";
+import { closeClient, getClient, getCollection } from "@/lib/database/mongodb";
 
 type Props = {
   meetupData: Meetup;
@@ -11,9 +13,22 @@ type Params = {
   meetupId: string;
 };
 
-export const getStaticPaths: GetStaticPaths = () => {
+export const getStaticPaths: GetStaticPaths = async () => {
+  const client = await getClient();
+  const meetupsCollection = getCollection(client);
+
+  const meetupIds = await meetupsCollection
+    .find({}, { projection: { _id: 1 } })
+    .toArray();
+
+  closeClient(client);
+
   return {
-    paths: [{ params: { meetupId: "m1" } }],
+    paths: meetupIds.map((meetup) => ({
+      params: {
+        meetupId: meetup._id.toString(),
+      },
+    })),
     fallback: false,
   };
 };
@@ -21,19 +36,30 @@ export const getStaticPaths: GetStaticPaths = () => {
 export const getStaticProps: GetStaticProps<Props, Params> = async ({
   params,
 }) => {
-  if (!params?.meetupId) {
-    return { notFound: true };
-  }
+  const meetupId = params?.meetupId;
 
-  const DUMMY_MEETUP: Meetup = {
-    id: params.meetupId,
-    title: "First Meetup",
-    image: "http://media.krakow.travel/photos/18784/noresize.jpg",
-    address: "123 Main St, City",
-    description: "This is the first meetup.",
+  if (!meetupId) return { notFound: true };
+
+  const client = await getClient();
+  const meetupsCollection = getCollection(client);
+
+  const meetup = await meetupsCollection.findOne({
+    _id: new ObjectId(meetupId),
+  });
+
+  closeClient(client);
+
+  if (!meetup) return { notFound: true };
+
+  const meetupData: Meetup = {
+    id: meetup._id.toString(),
+    title: meetup.title,
+    image: meetup.image,
+    address: meetup.address,
+    description: meetup.description,
   };
 
-  return { props: { meetupData: DUMMY_MEETUP } };
+  return { props: { meetupData } };
 };
 
 export default function MeetupDetails({
