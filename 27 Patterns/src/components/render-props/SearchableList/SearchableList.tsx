@@ -1,4 +1,4 @@
-import { ChangeEvent, useState } from "react";
+import { ChangeEvent, useRef, useState } from "react";
 
 type Props<T> = {
   items: T[];
@@ -11,6 +11,7 @@ export default function SearchableList<T>({
   itemKeyfn,
   children,
 }: Props<T>) {
+  const lastChange = useRef<number | null>(null);
   const [searchedText, setSearchedText] = useState<string>("");
 
   const searchResults = items.filter((item) =>
@@ -20,7 +21,14 @@ export default function SearchableList<T>({
   );
 
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
-    setSearchedText(event.target.value);
+    if (lastChange.current) {
+      clearTimeout(lastChange.current);
+    }
+
+    lastChange.current = setTimeout(() => {
+      lastChange.current = null;
+      setSearchedText(event.target.value);
+    }, 500);
   };
 
   return (
