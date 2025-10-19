@@ -3,9 +3,17 @@ import Async from "./Async";
 
 describe("Async component", () => {
   test("should render post list", async () => {
+    const mockData = [
+      { id: 1, title: "test" },
+      { id: 2, title: "test" },
+    ];
+    window.fetch = jest.fn().mockResolvedValue({
+      json: async () => mockData,
+    });
     render(<Async />);
 
     const listItemElements = await screen.findAllByRole("listitem");
     expect(listItemElements).not.toHaveLength(0);
   });
 });
+
