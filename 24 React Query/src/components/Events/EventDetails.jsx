@@ -4,8 +4,11 @@ import Header from "../Header.jsx";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { deleteEvent, fetchEvent } from "../../util/http.js";
 import ErrorBlock from "../UI/ErrorBlock.jsx";
+import Modal from "../UI/Modal.jsx";
+import { useState } from "react";
 
 export default function EventDetails() {
+  const [isDeleting, setIsDeleting] = useState(false);
   const { id } = useParams();
   const queryClient = useQueryClient();
   const navigate = useNavigate();
@@ -21,9 +24,17 @@ export default function EventDetails() {
     },
   });
 
-  const removeEventHandler = () => {
-    const removeEvent = confirm("Are you sure?");
-    if (removeEvent) mutate({ id });
+  const handleStartDelete = () => {
+    setIsDeleting(true);
+  };
+
+  const handleStopDelete = () => {
+    setIsDeleting(false);
+  };
+
+  const handleDeleteEvent = (e) => {
+    e.preventDefault();
+    mutate({ id });
   };
 
   const { data, isError, error } = useQuery({
@@ -43,7 +54,7 @@ export default function EventDetails() {
         <header>
           <h1>{data.title}</h1>
           <nav>
-            <button onClick={removeEventHandler} disabled={isRemoving}>
+            <button onClick={handleStartDelete} disabled={isRemoving}>
               {isRemoving ? "Removing..." : "Delete"}
             </button>
             <Link to="edit">Edit</Link>
@@ -77,6 +88,22 @@ export default function EventDetails() {
   return (
     <>
       <Outlet />
+      {isDeleting && (
+        <Modal onClose={handleStopDelete}>
+          <form onSubmit={handleDeleteEvent}>
+            <h2>Are you sure?</h2>
+            <p>This action cannot be undone!</p>
+            <div className="form-actions">
+              <button className="button-text" onClick={handleStopDelete}>
+                Cancel
+              </button>
+              <button className="button" type="submit" disabled={isRemoving}>
+                {isRemoving ? "Deleting..." : "Delete"}
+              </button>
+            </div>
+          </form>
+        </Modal>
+      )}
       <Header>
         <Link to="/events" className="nav-item">
           View all Events
