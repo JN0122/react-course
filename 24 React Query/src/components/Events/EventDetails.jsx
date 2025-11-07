@@ -1,8 +1,9 @@
 import { useState } from "react";
 import { Link, Outlet, useNavigate, useParams } from "react-router-dom";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 
 import Header from "../Header.jsx";
+import { queryClient } from "../../util/queryClient.js";
 import { deleteEvent, fetchEvent } from "../../util/http.js";
 import ErrorBlock from "../UI/ErrorBlock.jsx";
 import Modal from "../UI/Modal.jsx";
@@ -10,7 +11,6 @@ import Modal from "../UI/Modal.jsx";
 export default function EventDetails() {
   const [isDeleting, setIsDeleting] = useState(false);
   const { id } = useParams();
-  const queryClient = useQueryClient();
   const navigate = useNavigate();
 
   const { mutate, isPending: isRemoving } = useMutation({
