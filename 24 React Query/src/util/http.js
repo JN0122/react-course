@@ -1,7 +1,11 @@
-export async function fetchEvents(searchQuery) {
-  const response = await fetch(
-    `http://localhost:3000/events${searchQuery ? `?search=${searchQuery}` : ""}`
-  );
+export async function fetchEvents({ signal, searchQuery, max }) {
+  let url = "http://localhost:3000/events";
+
+  if (searchQuery && max) url += `?search=${searchQuery}&max=${max}`;
+  else if (searchQuery) url += `?search=${searchQuery}`;
+  else if (max) url += `?max=${max}`;
+
+  const response = await fetch(url, { signal });
 
   if (!response.ok) {
     const error = new Error("An error occurred while fetching the events");
