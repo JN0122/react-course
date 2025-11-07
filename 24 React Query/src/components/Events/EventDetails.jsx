@@ -1,11 +1,11 @@
+import { useState } from "react";
 import { Link, Outlet, useNavigate, useParams } from "react-router-dom";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 import Header from "../Header.jsx";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { deleteEvent, fetchEvent } from "../../util/http.js";
 import ErrorBlock from "../UI/ErrorBlock.jsx";
 import Modal from "../UI/Modal.jsx";
-import { useState } from "react";
 
 export default function EventDetails() {
   const [isDeleting, setIsDeleting] = useState(false);
@@ -38,7 +38,7 @@ export default function EventDetails() {
   };
 
   const { data, isError, error } = useQuery({
-    queryKey: ["event-details", id],
+    queryKey: ["events", id],
     queryFn: (context) => fetchEvent({ id, ...context }),
   });
 
