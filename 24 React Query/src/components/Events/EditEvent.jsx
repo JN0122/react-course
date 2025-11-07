@@ -1,43 +1,32 @@
-import { Link, useNavigate, useParams } from "react-router-dom";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import {
+  Link,
+  redirect,
+  useNavigate,
+  useNavigation,
+  useParams,
+  useSubmit,
+} from "react-router-dom";
+import { useQuery } from "@tanstack/react-query";
 
 import Modal from "../UI/Modal.jsx";
 import LoadingIndicator from "../UI/LoadingIndicator.jsx";
 import EventForm from "./EventForm.jsx";
 import { fetchEvent, updateEvent } from "../../util/http.js";
 import ErrorBlock from "../UI/ErrorBlock.jsx";
+import { queryClient } from "../../util/queryClient.js";
 
 export default function EditEvent() {
   const { id } = useParams();
   const navigate = useNavigate();
-  const queryClient = useQueryClient();
+  const submit = useSubmit();
+
+  const { state } = useNavigation();
+  const isUpdating = state === "submitting";
 
   const { data, isError, error } = useQuery({
     queryKey: ["events", id],
     queryFn: ({ signal }) => fetchEvent({ id, signal }),
-  });
-
-  const {
-    mutate,
-    isPending: isUpdating,
-    error: updateError,
-  } = useMutation({
-    mutationFn: (data) => updateEvent(data),
-    onMutate: async (data) => {
-      const newData = data?.event;
-      const oldData = queryClient.getQueryData(["events", id]);
-
-      await queryClient.cancelQueries({ queryKey: ["events", id] });
-      queryClient.setQueryData(["events", id], newData);
-
-      return { oldData };
-    },
-    onError: (error, data, context) => {
-      queryClient.setQueryData(["events", id], context.oldData);
-    },
-    onSettled: () => {
-      queryClient.invalidateQueries(["events", id]);
-    },
+    staleTime: 10_000,
   });
 
   function handleClose() {
@@ -45,8 +34,7 @@ export default function EditEvent() {
   }
 
   function handleSubmit(formData) {
-    mutate({ id, event: formData });
-    handleClose();
+    submit(formData, { method: "PUT" });
   }
 
   let content = (
@@ -79,15 +67,6 @@ export default function EditEvent() {
             }
           />
         )}
-        {updateError && (
-          <ErrorBlock
-            title="Failed to update event"
-            message={
-              updateError.info?.message ||
-              "Please check your inputs and try again later."
-            }
-          />
-        )}
         <div className="form-actions">
           <Link to="../" className="button">
             Okay
@@ -97,5 +76,23 @@ export default function EditEvent() {
     );
 
   return <Modal onClose={handleClose}>{content}</Modal>;
+}
+
+export function loader({ params }) {
+  const { id } = params;
+
+  return queryClient.fetchQuery({
+    queryKey: ["events", id],
+    queryFn: ({ signal }) => fetchEvent({ id, signal }),
+  });
+}
+
+export async function action({ request, params }) {
+  const data = await request.formData();
+  const updatedEventData = Object.fromEntries(data);
+
+  await updateEvent({ id: params.id, event: updatedEventData });
+  await queryClient.invalidateQueries(["events"]);
+  return redirect("../");
 }
 
